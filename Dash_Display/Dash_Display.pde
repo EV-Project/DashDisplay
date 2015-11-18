@@ -19,21 +19,18 @@ Float BL;
 // Seting the size of the plane   
  size(5000, 4000);
 //assigning the serial val to the variable port 
-  port = new Serial(this, "COM4", 250000);
+  port = new Serial(this, "COM8", 250000);
   port.bufferUntil('\n');
 //loading the font and assigning to a variable  
-  font = loadFont("ArialUnicodeMS-200.vlw");
-  textFont(font, 200);
+  font = createFont("ArialUnicodeMS", 100);
+  textFont(font, 100);
   smooth();
 
  }
  void draw () {
 //Set the back ground color   
     background(0);
-// loading the font and assigning to a variable 
-    font = loadFont("ArialUnicodeMS-100.vlw");
-//Seting the font for text and the size    
-    textFont(font, 100);
+
     
 //****Speedo*****    
     

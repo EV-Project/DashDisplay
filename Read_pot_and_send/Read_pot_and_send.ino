@@ -4,7 +4,7 @@ int potPin = 0;
 
 void setup()
 {
-  //Create Serial Object (9600 Baud)
+  //Create Serial Object (250000 Baud)
   Serial.begin(250000);
 
 }
