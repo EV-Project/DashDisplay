@@ -1,5 +1,8 @@
-
-
+// Variables used to store the angles for acceleration, breaking, speed, amp
+float A_acc = 90;
+float A_bre = 90;
+float A_spe = 120;
+float A_amp = 65;
 
 
 
@@ -16,7 +19,7 @@ void draw(){
   // sets the background color
   background(0);
   
-    {  
+    
     // motor statuse  
       stroke(#454844);
       strokeWeight(3.5);
@@ -48,42 +51,44 @@ void draw(){
         rect(580,100,1000,90);
         
     // Gate for speedo etc.
-      fill(#97ECF5); 
-     arc(1080,1300,1650,1500,(PI+(HALF_PI-PI/2)), TWO_PI); // background 
+        fill(#97ECF5); 
+        arc(1080,1300,1650,1500,(PI+(HALF_PI-PI/2)), TWO_PI); // background 
      
-      fill(255);
-       arc(1080,1300,1600,1450,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and breaking slot
-       
-       fill(0);
-        arc(1080,1300,1400,1250,(PI+(HALF_PI-PI/2)), TWO_PI); // speedometer
-        
-          fill(#6A3EFF);
-            arc(1080,1300,300,300,(PI+(HALF_PI-PI/2)), TWO_PI); //ampmeter
+         fill(255);
+         arc(1080,1300,1600,1450,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and breaking slot
+         
+            stroke(#FFEB03);
+            strokeWeight(6);
+              lineAngle(1080,1300,A_acc,735); //acceleration-Curve
             
-          stroke(#6A3EFF);
-          fill(0);
-            arc(1080,1300,30,30,(PI+(HALF_PI-PI/2)), TWO_PI);  // Center Dot          
-        
-        
-    // lines for accrelaration, breraking, speedometer and ampmeter
-        stroke(#FFEB03);
-        strokeWeight(6);
-          line(1080,675,1080,725); //acceleration
+            stroke(#03FF5D);
+            strokeWeight(6);
+              lineAngle(1080,1300,A_bre,690); //breaking-Curve
+         
+         stroke(250,244,197);
+         fill(0);
+         arc(1080,1300,1400,1250,(PI+(HALF_PI-PI/2)), TWO_PI); // speedometer
           
-        stroke(#03FF5D);
-        strokeWeight(6);
-          line(1080,725,1080,775); //breaking
-          
-        stroke(255,0,0);
-        strokeWeight(10);
-          line(1080,1400,500,775); //speedometer
-          
-        stroke(3,252,250);
-        strokeWeight(6);
-          line(1080,1400,1080,1300); //ampmeter
+            stroke(255,0,0);
+            strokeWeight(10);
+              lineAngle(1080,1300,A_spe,655); //speed-Curve
+         
+         stroke(250,244,197); 
+         fill(#6A3EFF);
+         arc(1080,1300,300,300,(PI+(HALF_PI-PI/2)), TWO_PI); //ampmeter
+              
+         stroke(#6A3EFF);
+         fill(0);
+         arc(1080,1300,30,30,(PI+(HALF_PI-PI/2)), TWO_PI);  // Center Dot          
+                  
+           stroke(3,252,250);
+           strokeWeight(6);
+            lineAngle(1080,1300,A_amp,130); //ampmeter
    
-    
-    }
 
-
+}
+// this function is used to plot a line on an angle 
+void lineAngle(int x, int y, float angle, float length)
+{
+  line(x, y, x+cos(angle)*length, y-sin(angle)*length);
 }
