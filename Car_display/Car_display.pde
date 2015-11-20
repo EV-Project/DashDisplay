@@ -1,5 +1,5 @@
 // Variables used to store the angles for acceleration, breaking, speed, amp
-float A_acc = 90;
+float A_acc = 20;
 float A_bre = 90;
 float A_spe = 120;
 float A_amp = 65;
@@ -52,22 +52,27 @@ void draw(){
         
     // Gate for speedo etc.
         fill(#97ECF5); 
-        arc(1080,1300,1650,1500,(PI+(HALF_PI-PI/2)), TWO_PI); // background 
+        arc(1080,1300,1650,1650,(PI+(HALF_PI-PI/2)), TWO_PI); // background 
      
-         fill(255);
-         arc(1080,1300,1600,1450,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and breaking slot
+         fill(0);
+         arc(1080,1300,1600,1600,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and breaking slot
          
             stroke(#FFEB03);
             strokeWeight(6);
-              lineAngle(1080,1300,A_acc,735); //acceleration-Curve
+              lineAngle(1080,1300,A_acc,790); //acceleration-Curve
+         
+         stroke(149,38,148);
+         strokeWeight(1);
+         fill(0);
+         arc(1080,1300,1500,1500,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and breaking slot              
             
             stroke(#03FF5D);
             strokeWeight(6);
-              lineAngle(1080,1300,A_bre,690); //breaking-Curve
+              lineAngle(1080,1300,A_bre,740); //breaking-Curve
          
          stroke(250,244,197);
          fill(0);
-         arc(1080,1300,1400,1250,(PI+(HALF_PI-PI/2)), TWO_PI); // speedometer
+         arc(1080,1300,1400,1400,(PI+(HALF_PI-PI/2)), TWO_PI); // speedometer
           
             stroke(255,0,0);
             strokeWeight(10);
@@ -76,14 +81,16 @@ void draw(){
          stroke(250,244,197); 
          fill(#6A3EFF);
          arc(1080,1300,300,300,(PI+(HALF_PI-PI/2)), TWO_PI); //ampmeter
-              
-         stroke(#6A3EFF);
-         fill(0);
-         arc(1080,1300,30,30,(PI+(HALF_PI-PI/2)), TWO_PI);  // Center Dot          
-                  
+         
            stroke(3,252,250);
            strokeWeight(6);
-            lineAngle(1080,1300,A_amp,130); //ampmeter
+            lineAngle(1080,1300,A_amp,130); //ampmeter              
+              
+         stroke(0);
+         fill(0);
+         arc(1080,1310,40,40,(PI+(HALF_PI-PI/2)), TWO_PI);  // Center Dot          
+                  
+
    
 
 }
