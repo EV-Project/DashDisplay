@@ -45,10 +45,14 @@ void draw(){
               
     // battery charge level
     
-      fill(0,0,255);
+      fill(91,8,160);
       stroke(255,255,255);
-      
-        rect(580,100,1000,90);
+        rect(580,100,1000,100);
+        
+     // box can be used for messages etc.
+       
+       fill(255);
+       rect(580,250,1000,200);
         
     // Gate for speedo etc.
         fill(#97ECF5); 
@@ -84,7 +88,7 @@ void draw(){
          
            stroke(3,252,250);
            strokeWeight(6);
-            lineAngle(1080,1300,A_amp,130); //ampmeter              
+            lineAngle(1080,1300,A_amp,130); //ampmeter-Curve              
               
          stroke(0);
          fill(0);
