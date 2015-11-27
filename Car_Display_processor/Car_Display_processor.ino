@@ -22,38 +22,40 @@ const uint32_t dashID1 = wheel[1].dashID;  //telemetry messages from the wheel m
 const uint32_t dashID2= wheel[2].dashID;  //telemetry messages from the wheel manager
 const uint32_t dashID3 = wheel[3].dashID;  //telemetry messages from the wheel manager
 const uint32_t dashID4 = wheel[4].dashID;  //telemetry messages from the wheel manager
+const uint32_t pedalID = wheel[1].pedalID;
 
 // I D K
-FlexCAN CANbus(1000000);
-CANcallbacks canbus(&CANbus);
+  FlexCAN CANbus(1000000);
+  CANcallbacks canbus(&CANbus);
 
 
 bool redLightBit = false;
 bool greenLightBit = false;
-float RPM;
-float voltage;
-float current;
-float throttle;
-float brake;
+uint16_t RPMbit;
+uint16_t RPM;
+uint8_t voltage;
+uint8_t current;
+uint8_t throttle;
+uint8_t brake;
 
-void wheel1ProcessMessage (CAN_message_t &message){
-
-  
-}
-
-void wheel2ProcessMessage (CAN_message_t &message){
+bool wheel1ProcessMessage (CAN_message_t &message){
 
   
 }
-void wheel3ProcessMessage (CAN_message_t &message){
+
+bool wheel2ProcessMessage (CAN_message_t &message){
 
   
 }
-void wheel4ProcessMessage (CAN_message_t &message){
+bool wheel3ProcessMessage (CAN_message_t &message){
 
   
 }
-void pedalsProcessMessage (CAN_message_t &message){
+bool wheel4ProcessMessage (CAN_message_t &message){
+
+  
+}
+bool pedalProcessMessage (CAN_message_t &message){
 
   
 }
@@ -89,18 +91,30 @@ void setup() {
   dashFilter4.rtr = 0;
   dashFilter4.ext = 0;
   dashFilter4.id = dashID4;
+
+  CAN_filter_t pedalFilter;
+  pedalFilter.rtr = 0;
+  pedalFilter.ext = 0;
+  pedalFilter.id = pedalID;
   
 
   CANbus.setFilter(dashFilter1,0);
   CANbus.setFilter(dashFilter2,0);
   CANbus.setFilter(dashFilter3,0);
   CANbus.setFilter(dashFilter4,0);
+  CANbus.setFilter(pedalFilter,0);
 
 //fill the remaining filters to prevent ack.
-  for (int i = 2; i < 8; ++i)
+  for (int i = 5; i < 8; ++i)
   {
     CANbus.setFilter(dashFilter1,i);
   }
+
+  canbus.set_callback(dashFilter1.id, &wheel1ProcessMessage);
+  canbus.set_callback(dashFilter2.id, &wheel2ProcessMessage);
+  canbus.set_callback(dashFilter3.id, &wheel3ProcessMessage);
+  canbus.set_callback(dashFilter4.id, &wheel4ProcessMessage);
+  canbus.set_callback(pedalFilter.id, &pedalProcessMessage);        
 }
 
 void loop() {
@@ -108,12 +122,19 @@ void loop() {
   CAN_message_t message;
 
   while(canbus.receive(message)) {
-    for( int i=0; i<7; i++){
+    RPMbit = message.buf[0];
+    RPM = message.buf[1];
+    voltage = message.buf[2];
+    current = message.buf[3];
+    throttle = message.buf[4];
+    brake = message.buf[5]; 
+  }
+/*    for( int i=0; i<7; i++){
       Serial.print(message.buf[i]);
     }
     Serial.println();
   }
-  
+ */ 
 
        
 }
