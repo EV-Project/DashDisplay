@@ -1,15 +1,39 @@
+//imports the Serial comminiocation
+
+import processing.serial.*;
+Serial port;
+
+
 // Variables used to store the angles for acceleration, breaking, speed, amp
 float A_acc = 90;
 float A_bre = 90;
-float A_spe = 165;
-float A_amp = 140;
+float A_spe = 180;
+float A_amp = 180;
+
+// Strings to store unpacked messages from Serial  
+  String RPM        = "1";
+  String voltage    = "1";
+  String current    = "1";
+  String throttle   = "1";
+  String brake      = "1";
+  String telemBits  = "1";
+
+// a string to store each line of Serial communication
+ String data = "1";
 
 
-
+// Creating the font object
+PFont font;
 
 void setup(){
   // sets the size of the CANVAS (my computer resulotion)
   size(2160,1440);
+  
+//Port is the variable that stores the new serial communication 
+//from selected COM port @ 250000 baud
+  port = new Serial(this, "COM8", 250000);
+// reads the serial till end of the line  
+  port.bufferUntil('\n');
   
   
   smooth();
@@ -19,6 +43,11 @@ void draw(){
   // sets the background color
   background(0);
   
+  A_spe = ((Float.valueOf(RPM).floatValue()));
+  //angle = ((Float.valueOf(voltage).floatValue()));
+  A_amp = ((Float.valueOf(current).floatValue()));
+  A_acc = ((Float.valueOf(throttle).floatValue()));
+  A_bre = ((Float.valueOf(brake).floatValue()));
     
     // motor statuse  
       stroke(#454844);
@@ -104,9 +133,6 @@ void draw(){
            a +=10;
          }
          
-
-         
-         
         stroke(0); 
         fill(0);
         arc(1080,1300,1300,1300,(PI+(HALF_PI-PI/2)), TWO_PI); //   
@@ -139,11 +165,27 @@ void draw(){
          stroke(0);
          fill(0);
          arc(1080,1310,40,40,(PI+(HALF_PI-PI/2)), TWO_PI);  // Center Dot          
-                  
+          
 
-   
+
 
 }
+void serialevent(Serial port){
+  // read the serial till the end of the line
+  data = port.readStringUntil('\n');
+  
+  //
+   RPM       = data.substring(0, data.indexOf('A'));
+   voltage   = data.substring(data.indexOf("A") + 1, data.indexOf('B'));
+   current   = data.substring(data.indexOf("B") + 1, data.indexOf('C'));
+   throttle  = data.substring(data.indexOf("C") + 1, data.indexOf('D'));
+   brake     = data.substring(data.indexOf("D") + 1, data.indexOf('E'));
+   telemBits = data.substring(data.indexOf("E") + 1, data.indexOf('\n'));
+
+  
+}
+
+
 // this function is used to plot a line on an angle 
 void lineAngle(int x, int y, float angle, float length)
 {
