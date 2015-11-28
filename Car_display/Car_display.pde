@@ -41,8 +41,9 @@ void setup(){
    data = port.readStringUntil('\n');
 // initially the string will be empty
     data  = null;
-  
-  
+   
+  font = createFont("LucidaBright",100);
+  textFont(font,50);
   smooth();
 }
 
@@ -78,11 +79,65 @@ void draw(){
     // motor statuse  
       stroke(#454844);
       strokeWeight(3.5);
-      fill(255,255,255);
+      fill(255);
+      //motor 1
       ellipse(250,200,270,270);
+      float m1 = 0;
+         while (m1 < 360){
+           stroke(0);
+           strokeWeight(.9);
+           lineAngle(250,200,radians(m1),135);
+           
+           m1 +=5;
+         }
+      stroke(#454844);
+      strokeWeight(3.5);
+      fill(255);         
+      ellipse(250,200,230,230);
+          
+      //motor 2
       ellipse(250,550,270,270);
+      float m2 = 0;
+        while(m2 <360){
+          stroke(0);
+          strokeWeight(.9);
+          lineAngle(250,550,radians(m2), 135);
+          m2 +=5;
+        }
+      stroke(#454844);
+      strokeWeight(3.5);
+      fill(255);         
+      ellipse(250,550,230,230);
+      
+      //motor 3
       ellipse(1900,200,270,270);
+      float m3 = 0;
+        while(m3 <360){
+          stroke(0);
+          strokeWeight(.9);
+          lineAngle(1900,200,radians(m3), 135);
+          m3 +=5;
+        }
+      stroke(#454844);
+      strokeWeight(3.5);
+      fill(255);         
+      ellipse(1900,200,230,230);      
+      
+      
+      //motor 4
       ellipse(1900,550,270,270);
+      float m4 = 0;
+        while(m4 <360){
+          stroke(0);
+          strokeWeight(.9);
+          lineAngle(1900,550,radians(m4), 135);
+          m4 +=5;
+        }
+      stroke(#454844);
+      strokeWeight(3.5);
+      fill(255);         
+      ellipse(1900,550,230,230);      
+      
       
     //kelly contrller statuse indicators Red   
       fill(255,0,0); // three variables will determin the collor accordingly
@@ -105,24 +160,37 @@ void draw(){
       rect(580,100,1000,100);
       
       if (A_vol > 400){
+      stroke(0,255,0);  
       fill(0,255,0); //green
       rect(580,100,A_vol,100);
       } 
       if (A_vol < 400 && A_vol > 150){
+      stroke(255,243,3);  
       fill(255,243,3); //yellow
       rect(580,100,A_vol,100);
       }
       if (A_vol < 150){
+      stroke(255,0,0);  
       fill(255,0,0); // red
       rect(580,100,A_vol,100);
       }
+      
+      // showing the battery level in % value
+      float PA_vol = 0;
+      PA_vol = (A_vol/10);
+      
+      text ("Battery = %", 600,300);
+      text (PA_vol, 850,300);
+      
+      
      // box can be used for messages etc.
        
-       fill(255);
+       noFill();
        rect(580,250,1000,200);
         
     // Gate for speedo etc.
-        fill(#97ECF5); 
+        fill(#97ECF5);
+        stroke(255);
         arc(1080,1300,1650,1650,(PI+(HALF_PI-PI/2)), TWO_PI); // background 
      
          fill(0);
@@ -179,6 +247,11 @@ void draw(){
             stroke(255,0,0);
             strokeWeight(10);
               lineAngle(1080,1300,radians(A_spe),650); //speed-Curve
+              
+              // to hide the lines @ 0 and 180 degrees
+              stroke(0);
+              fill(0);
+              ellipse(1080,1300,310,310);
          
          stroke(250,244,197); 
          fill(#6A3EFF);
@@ -231,7 +304,6 @@ void serialEvent(Serial port){
 */
 
 // this function is used to plot a line on an angle 
-void lineAngle(int x, int y, float angle, float length)
-{
+void lineAngle(int x, int y, float angle, float length){
   line(x, y, (x+cos(angle)*length), (y-sin(angle)*length));
 }
