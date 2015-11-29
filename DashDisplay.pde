@@ -24,6 +24,11 @@ float A_vol = 0;
 
 
 
+float batteryMin = 3.0*8*4;
+float batteryMid = 3.3*8*4;
+float batteryMax = 3.6*8*4;
+
+
 
 // Creating the font object
 PFont font;
@@ -55,31 +60,32 @@ void draw(){
   if (port.available() > 0) {
     data = port.readStringUntil('\n');
   }
-  
+  String payload = "";
   if (data != ""){
     int offset = data.indexOf("U*"); //this is our Header (0x552A)
     if(offset>=0){
-      switch(data.substring(offset+3, offset+4)){
+      payload = data.substring(offset+3, data.indexOf('\n'));
+      switch(data.substring(offset+2, offset+3)){
         case "A":
-          RPM = data.substring(offset+3, data.indexOf('\n'));
+          RPM = payload;
           break;
         case "B":
-          voltage   = data.substring(offset+3, data.indexOf('\n'));
+          voltage = payload;
           break;
         case "C":
-          current   = data.substring(offset+3, data.indexOf('\n'));
+          current = payload;
           break;
         case "D":
-          throttle  = data.substring(offset+3, data.indexOf('\n'));
+          throttle = payload;
           break;
         case "E":
-          brake     = data.substring(offset+3, data.indexOf('\n'));
+          brake = payload;
           break;
         case "F":
-          telemBits = data.substring(offset+3, data.indexOf('\n'));
+          telemBits = payload;
           break;
         default:
-          //not recognised
+          //packet not recognised
       }
     }
   } 
@@ -176,28 +182,27 @@ void draw(){
       stroke(255,255,255);
       rect(580,100,1000,100);
       
-      if (A_vol > 400){
-      stroke(0,255,0);  
-      fill(0,255,0); //green
-      rect(580,100,A_vol,100);
-      } 
-      if (A_vol < 400 && A_vol > 150){
-      stroke(255,243,3);  
-      fill(255,243,3); //yellow
-      rect(580,100,A_vol,100);
-      }
-      if (A_vol < 150){
-      stroke(255,0,0);  
-      fill(255,0,0); // red
-      rect(580,100,A_vol,100);
+      if (A_vol < batteryMax && A_vol > batteryMid){
+        stroke(0,255,0);  
+        fill(0,255,0); //green
+        rect(580,100,A_vol,100);
+      }else if (A_vol < batteryMid && A_vol > batteryMin){
+        stroke(255,243,3);  
+        fill(255,243,3); //yellow
+        rect(580,100,A_vol,100);
+      }else {
+        stroke(255,0,0);  
+        fill(255,0,0); // red
+        rect(580,100,A_vol,100);
       }
       
       // showing the battery level in % value
       float PA_vol = 0;
-      PA_vol = (A_vol/10);
-      
-      text ("Battery = %", 600,300);
-      text (PA_vol, 850,300);
+      PA_vol = 100*(A_vol - batteryMin) / (batteryMax - batteryMin);
+      String batteryDisplay = "Battery = " + PA_vol + "%";
+      text (batteryDisplay, 600,300);
+      //text (A_vol, 600,400);
+      //text (PA_vol, 850,300);
       
       
      // box can be used for messages etc.
