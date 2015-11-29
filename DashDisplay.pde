@@ -3,24 +3,24 @@
 
 import processing.serial.*;
 // a string to store each line of Serial communication
- String data = "1";
+String data = "";
 Serial port;
 
 
-// Variables used to store the angles for acceleration, breaking, speed, amp
+// Variables used to store the angles for acceleration, braking, speed, amp
 float A_acc = 90;
-float A_bre = 90;
+float A_bra = 90;
 float A_spe = 180;
 float A_amp = 180;
 float A_vol = 0;
 
 // Strings to store unpacked messages from Serial  
-  String RPM        = "1";
-  String voltage    = "1";
-  String current    = "1";
-  String throttle   = "1";
-  String brake      = "1";
-  String telemBits  = "1";
+  String RPM        = "0";
+  String voltage    = "0";
+  String current    = "0";
+  String throttle   = "0";
+  String brake      = "0";
+  String telemBits  = "0";
 
 
 
@@ -47,24 +47,41 @@ void setup(){
   smooth();
 }
 
+
 void draw(){
-  // sets the background color
+  // sets the background colour
   background(0);
   
-   while (port.available() > 0) {
-  data = port.readStringUntil('\n');
+  if (port.available() > 0) {
+    data = port.readStringUntil('\n');
   }
   
-  if (data != null){
-  //
-  
- 
-   RPM       = data.substring(0, data.indexOf('A'));
-   voltage   = data.substring(data.indexOf("A") + 1, data.indexOf('B'));
-   current   = data.substring(data.indexOf("B") + 1, data.indexOf('C'));
-   throttle  = data.substring(data.indexOf("C") + 1, data.indexOf('D'));
-   brake     = data.substring(data.indexOf("D") + 1, data.indexOf('E'));
-   telemBits = data.substring(data.indexOf("E") + 1, data.indexOf('\n'));
+  if (data != ""){
+    int offset = data.indexOf("U*"); //this is our Header (0x552A)
+    if(offset>=0){
+      switch(data.substring(offset+3, offset+4)){
+        case "A":
+          RPM = data.substring(offset+3, data.indexOf('\n'));
+          break;
+        case "B":
+          voltage   = data.substring(offset+3, data.indexOf('\n'));
+          break;
+        case "C":
+          current   = data.substring(offset+3, data.indexOf('\n'));
+          break;
+        case "D":
+          throttle  = data.substring(offset+3, data.indexOf('\n'));
+          break;
+        case "E":
+          brake     = data.substring(offset+3, data.indexOf('\n'));
+          break;
+        case "F":
+          telemBits = data.substring(offset+3, data.indexOf('\n'));
+          break;
+        default:
+          //not recognised
+      }
+    }
   } 
   
   
@@ -72,11 +89,11 @@ void draw(){
   A_vol = ((Float.valueOf(voltage).floatValue()));
   A_amp = ((Float.valueOf(current).floatValue()));
   A_acc = ((Float.valueOf(throttle).floatValue()));
-  A_bre = ((Float.valueOf(brake).floatValue()));
+  A_bra = ((Float.valueOf(brake).floatValue()));
  
 
    
-    // motor statuse  
+    // motor status
       stroke(#454844);
       strokeWeight(3.5);
       fill(255);
@@ -139,15 +156,15 @@ void draw(){
       ellipse(1900,550,230,230);      
       
       
-    //kelly contrller statuse indicators Red   
-      fill(255,0,0); // three variables will determin the collor accordingly
+    //kelly controller status indicators Red
+      fill(255,0,0); // three variables will determine the colour accordingly
         ellipse(90,250,25,25);
         ellipse(90,600,25,25);
         ellipse(2060,250,25,25);
         ellipse(2060,600,25,25);
       
-    //kelly contrller statuse indicators Green          
-      fill(0,255,0); // three variables will determin the collor accordingly
+    //kelly controller status indicators Green
+      fill(0,255,0); // three variables will determine the colour accordingly
         ellipse(90,150,25,25);
         ellipse(90,500,25,25);
         ellipse(2060,150,25,25);
@@ -194,7 +211,7 @@ void draw(){
         arc(1080,1300,1650,1650,(PI+(HALF_PI-PI/2)), TWO_PI); // background 
      
          fill(0);
-         arc(1080,1300,1600,1600,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and breaking slot
+         arc(1080,1300,1600,1600,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and braking slot
                   
             stroke(#FFEB03);
             strokeWeight(6);
@@ -203,12 +220,12 @@ void draw(){
          stroke(149,38,148);
          strokeWeight(1);
          fill(0);
-         arc(1080,1300,1500,1500,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and breaking slot              
+         arc(1080,1300,1500,1500,(PI+(HALF_PI-PI/2)), TWO_PI); //acceleration and braking slot
          
                    
             stroke(#03FF5D);
             strokeWeight(6);
-              lineAngle(1080,1300,radians(A_bre),740); //breaking-Curve
+              lineAngle(1080,1300,radians(A_bra),740); //braking-Curve
          
          stroke(250,244,197);
          fill(0);
@@ -280,28 +297,8 @@ void draw(){
 
 
 
-} /*
-void serialEvent(Serial port){
-  // read the serial till the end of the line
-  
-  while (port.available() > 0) {
-  data = port.readStringUntil('\n');
-  }
-  
-  if (data != null){
-  //
-  
- 
-   RPM       = data.substring(0, data.indexOf('A'));
-   voltage   = data.substring(data.indexOf("A") + 1, data.indexOf('B'));
-   current   = data.substring(data.indexOf("B") + 1, data.indexOf('C'));
-   throttle  = data.substring(data.indexOf("C") + 1, data.indexOf('D'));
-   brake     = data.substring(data.indexOf("D") + 1, data.indexOf('E'));
-   telemBits = data.substring(data.indexOf("E") + 1, data.indexOf('\n'));
-  } 
 }
 
-*/
 
 // this function is used to plot a line on an angle 
 void lineAngle(int x, int y, float angle, float length){
