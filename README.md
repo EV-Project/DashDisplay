@@ -3,6 +3,7 @@
 The first stages of development!
 A display will be connected to an Raspberry Pi which makes The serial communication easier.
 
+The following are going to be displayed in HMI:
 1. vehicle speed 
 2. Battery level
 3. charging indicator
